@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Valentine</title>
+  <style>
+    :root{
+      --bg1:#0b1020;
+      --bg2:#1b0b1a;
+      --card:#0f172a;
+      --soft:#111827;
+      --text:#e5e7eb;
+      --muted:#a1a1aa;
+      --accent:#ff4d8d;
+      --accent2:#ff9ac2;
+      --ok:#22c55e;
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --radius: 24px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 20% 20%, rgba(255,77,141,.22), transparent 55%),
+        radial-gradient(900px 600px at 80% 30%, rgba(255,154,194,.18), transparent 55%),
+        radial-gradient(900px 700px at 50% 95%, rgba(34,197,94,.08), transparent 55%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    /* background sparkle */
+    .noise{
+      position:fixed; inset:0;
+      background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="120" height="120" filter="url(%23n)" opacity="0.15"/></svg>');
+      mix-blend-mode:overlay;
+      pointer-events:none;
+    }
+
+    .wrap{
+      position:relative;
+      min-height:100vh;
+      display:block;
+      padding:24px 0;
+    }
+
+    @media (max-width: 860px){
+      .wrap{place-items:start stretch; padding:16px;}
+    }
+
+    .card{
+      width:min(860px, 100%);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      overflow:hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap:0;
+    }
+
+    @media (max-width: 860px){
+      .grid{grid-template-columns:1fr}
+      .left,.right{padding:22px;}
+    }
+
+    .left{
+      padding:34px 34px 30px;
+      background: linear-gradient(135deg, rgba(255,77,141,.18), rgba(255,255,255,0) 55%);
+    }
+
+    .right{
+      padding:34px;
+      background: linear-gradient(135deg, rgba(34,197,94,.10), rgba(255,255,255,0) 55%);
+      border-left:1px solid rgba(255,255,255,.08);
+    }
+
+    @media (max-width: 860px){
+      .right{border-left:none;border-top:1px solid rgba(255,255,255,.08)}
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 14px;
+      border-radius:999px;
+      background: rgba(255,77,141,.12);
+      border:1px solid rgba(255,77,141,.25);
+      color: var(--accent2);
+      font-weight:600;
+      letter-spacing:.2px;
+      font-size:14px;
+    }
+
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--accent));
+      box-shadow: 0 0 0 6px rgba(255,77,141,.12);
+    }
+
+    h1{
+      margin:18px 0 10px;
+      font-size: clamp(34px, 4.2vw, 54px);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    p{
+      margin:0;
+      color: rgba(229,231,235,.85);
+      line-height:1.6;
+      font-size: 16px;
+    }
+
+    .muted{color:var(--muted)}
+
+    .divider{
+      height:1px;
+      background: rgba(255,255,255,.1);
+      margin:22px 0;
+    }
+
+    .mini{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+
+    .pill{
+      padding:10px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      font-size:13px;
+      color: rgba(229,231,235,.9);
+    }
+
+    .question{
+      margin:0 0 14px;
+      font-weight:700;
+      font-size: 18px;
+    }
+
+    .nameRow{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin:14px 0 18px;
+    }
+
+    @media (max-width: 520px){
+      .nameRow{grid-template-columns:1fr}
+    }
+
+    label{display:block; font-size:13px; color: rgba(229,231,235,.85); margin-bottom:8px;}
+
+    input{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(17,24,39,.55);
+      color: var(--text);
+      outline:none;
+    }
+    input:focus{border-color: rgba(255,77,141,.45); box-shadow: 0 0 0 4px rgba(255,77,141,.15)}
+
+    .actions{
+      position:relative;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      margin-top:12px;
+      flex-wrap:wrap;
+    }
+
+    button{
+      appearance:none;
+      border:none;
+      cursor:pointer;
+      border-radius: 18px;
+      padding: 12px 16px;
+      font-weight:700;
+      color: var(--text);
+      transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+    }
+
+    .yes{
+      background: linear-gradient(135deg, rgba(34,197,94,1), rgba(34,197,94,.72));
+      box-shadow: 0 14px 30px rgba(34,197,94,.22);
+    }
+    .yes:hover{transform: translateY(-1px); filter: brightness(1.05)}
+
+    .no{
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 14px 30px rgba(0,0,0,.18);
+      position:relative;
+    }
+    .no:hover{transform: translateY(-1px); filter: brightness(1.05)}
+
+    .secondary{
+      background: rgba(255,77,141,.12);
+      border: 1px solid rgba(255,77,141,.22);
+      color: var(--accent2);
+    }
+
+    .toast{
+      margin-top:18px;
+      padding:14px 14px;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(17,24,39,.55);
+      display:none;
+    }
+
+    .toast strong{color:#fff}
+
+    /* Floating hearts layer */
+    .hearts{position:fixed; inset:0; pointer-events:none; overflow:hidden;}
+    .heart{
+      position:absolute;
+      width:16px;height:16px;
+      transform: rotate(45deg);
+      background: rgba(255,77,141,.75);
+      filter: drop-shadow(0 8px 14px rgba(255,77,141,.22));
+      border-radius: 4px;
+      animation: floatUp linear forwards;
+      opacity:0;
+    }
+    .heart::before,.heart::after{
+      content:"";
+      position:absolute;
+      width:16px;height:16px;
+      background: inherit;
+      border-radius: 999px;
+    }
+    .heart::before{left:-8px; top:0}
+    .heart::after{left:0; top:-8px}
+
+    @keyframes floatUp{
+      0%{ transform: translateY(40px) rotate(45deg) scale(.8); opacity:0; }
+      10%{ opacity:1; }
+      100%{ transform: translateY(-120vh) rotate(45deg) scale(1.15); opacity:0; }
+    }
+
+    /* Confetti */
+    canvas#confetti{
+      position:fixed; inset:0;
+      pointer-events:none;
+    }
+
+    /* Footer */
+    .footer{
+      margin-top:18px;
+      font-size:12px;
+      color: rgba(229,231,235,.6);
+    }
+
+    .kbd{
+      display:inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(229,231,235,.9);
+      font-size: 12px;
+      font-weight:600;
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts" id="hearts"></div>
+  <canvas id="confetti"></canvas>
+  <div class="noise"></div>
+
+  <main class="wrap">
+    <section class="card" role="region" aria-label="Valentine website">
+      <div class="grid">
+        <div class="left" id="leftPanel">
+          <div class="badge"><span class="dot" aria-hidden="true"></span> Valentine Mode: ON</div>
+          <h1 id="headline">Satu pertanyaan kecil.</h1>
+          <p id="subcopy">Aku nggak mau bikin ini ribet. Cuma pengin jujur aja—kamu bikin hariku lebih lembut.</p>
+
+          <div class="divider"></div>
+
+          <p class="muted" id="promptLine">Isi nama biar pesannya terasa personal.</p>
+          <div class="mini" aria-label="Highlights">
+            <span class="pill">Simple</span>
+            <span class="pill">Soft</span>
+            <span class="pill">Agak dramatis</span>
+            <span class="pill">100% niat baik</span>
+          </div>
+        </div>
+
+        <div class="right">
+          <!-- PAGE 1: ASK -->
+          <div id="pageAsk">
+            <p class="question" id="question">Will you be my Valentine?</p>
+
+            <div class="nameRow">
+              <div>
+                <label for="from">Dari</label>
+                <input id="from" placeholder="Nama kamu" autocomplete="name" />
+              </div>
+              <div>
+                <label for="to">Untuk</label>
+                <input id="to" placeholder="Nama dia" autocomplete="off" />
+              </div>
+            </div>
+
+            <div style="margin: 8px 0 16px;">
+              <label for="song">Link lagu (Spotify/YouTube/mp3 URL)</label>
+              <input id="song" placeholder="Tempel link lagu di sini" autocomplete="off" />
+              <div class="footer" style="margin-top:10px;">Catatan: autoplay dibatasi browser—lagu akan mulai setelah kamu klik “Yes”.</div>
+            </div>
+
+            <div style="margin: 2px 0 10px;">
+              <label for="letter">Surat singkat</label>
+              <textarea id="letter" rows="5" placeholder="Tulis suratnya di sini..." style="width:100%;padding:12px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background: rgba(17,24,39,.55);color: var(--text);outline:none;resize:vertical;"></textarea>
+            </div>
+
+            <div class="actions">
+              <button class="yes" id="btnYes" type="button">Yes</button>
+              <button class="no" id="btnNo" type="button">No</button>
+              <button class="secondary" id="btnShare" type="button">Copy link</button>
+            </div>
+
+            <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+            <div class="footer">
+              Tips: tekan <span class="kbd">Enter</span> untuk “Yes”.
+            </div>
+          </div>
+
+          <!-- PAGE 2: LETTER -->
+          <div id="pageLetter" style="display:none;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+              <div>
+                <div class="badge" style="margin-bottom:12px;"><span class="dot" aria-hidden="true"></span> Surat Valentine</div>
+                <div style="font-weight:900;font-size:22px;">Untuk <span id="toName">kamu</span></div>
+                <div class="muted" style="margin-top:6px;">dari <span id="fromName">Aku</span></div>
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button class="secondary" id="btnCopy2" type="button">Copy link</button>
+                <button class="no" id="btnBack" type="button">Back</button>
+              </div>
+            </div>
+
+            <div style="margin-top:16px;border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background: rgba(17,24,39,.55);">
+              <div style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.10);display:flex;align-items:center;gap:10px;">
+                <div style="width:12px;height:12px;border-radius:999px;background:rgba(255,77,141,.9);"></div>
+                <div style="font-weight:800;">Suratnya</div>
+              </div>
+              <div id="letterText" style="padding:18px 16px;white-space:pre-wrap;line-height:1.7;color: rgba(229,231,235,.92);"></div>
+            </div>
+
+            <div id="embedWrap" style="display:none;margin-top:12px;">
+              <div class="footer" style="margin:0 0 8px;">Player</div>
+              <div id="embed" style="border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background: rgba(17,24,39,.35);"></div>
+            </div>
+            <audio id="player" preload="none" style="width:100%;margin-top:10px;display:none" controls></audio>
+
+            <div class="toast" id="toast2" role="status" aria-live="polite" style="display:none;margin-top:12px;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // --- Utilities ---
+    const $ = (q) => document.querySelector(q);
+    const rand = (min, max) => Math.random() * (max - min) + min;
+
+    // --- Personalization via URL params ---
+    const params = new URLSearchParams(location.search);
+    const fromInput = $('#from');
+    const toInput = $('#to');
+    const songInput = $('#song');
+    const letterInput = document.getElementById('letter');
+    const player = document.getElementById('player');
+    const embedWrap = document.getElementById('embedWrap');
+    const embed = document.getElementById('embed');
+    const pageAsk = document.getElementById('pageAsk');
+    const pageLetter = document.getElementById('pageLetter');
+
+    const letterText = document.getElementById('letterText');
+    const fromName = document.getElementById('fromName');
+    const toName = document.getElementById('toName');
+
+    const toastEl2 = document.getElementById('toast2');
+
+    function toast2(message){
+      toastEl2.style.display = 'block';
+      toastEl2.innerHTML = message;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toastEl2.style.display = 'none';
+      }, 2800);
+    }
+
+    function showPage(which){
+      const leftPanel = document.getElementById('leftPanel');
+      const mobile = window.matchMedia('(max-width: 860px)').matches;
+
+      if (which === 'letter'){
+        pageAsk.style.display = 'none';
+        pageLetter.style.display = 'block';
+        // On mobile, make the letter feel full-width by hiding the left panel
+        if (mobile && leftPanel) leftPanel.style.display = 'none';
+      } else {
+        pageLetter.style.display = 'none';
+        pageAsk.style.display = 'block';
+        if (leftPanel) leftPanel.style.display = '';
+      }
+    }
+
+    const savedFrom = params.get('from') || '';
+    const savedTo = params.get('to') || '';
+    const savedSong = params.get('song') || '';
+    const savedLetter = params.get('letter') || '';
+
+    if (savedFrom) fromInput.value = savedFrom;
+    if (savedTo) toInput.value = savedTo;
+    if (savedSong) songInput.value = savedSong;
+    if (savedLetter) {
+      // stored as URI encoded text
+      try { letterInput.value = decodeURIComponent(savedLetter); }
+      catch { letterInput.value = savedLetter; }
+    }
+
+    // If someone opens a link that already contains a letter, show it immediately
+    function renderLetter(){
+      const from = (fromInput.value || 'Hahan').trim();
+      const to = (toInput.value || 'Della').trim();
+      const letter = (letterInput.value || '').trim();
+
+      toName.textContent = to;
+      fromName.textContent = from;
+      letterText.textContent = letter || '...';
+
+      // If opened from a shared link (has params), show letter page automatically
+      const hasSharedData = !!(params.get('letter') || params.get('song') || params.get('from') || params.get('to'));
+      if (hasSharedData) {
+        showPage('letter');
+        // also set music if present
+        const s = (songInput.value || '').trim();
+        if (s) setMusic(s);
+      }
+    }
+    renderLetter();
+
+    function updateCopy(){
+      const from = fromInput.value.trim();
+      const to = toInput.value.trim();
+      const song = songInput.value.trim();
+      const letterRaw = (letterInput.value || '').trim();
+      const letter = letterRaw ? encodeURIComponent(letterRaw) : '';
+
+      const next = new URL(location.href);
+      if (from) next.searchParams.set('from', from); else next.searchParams.delete('from');
+      if (to) next.searchParams.set('to', to); else next.searchParams.delete('to');
+      if (song) next.searchParams.set('song', song); else next.searchParams.delete('song');
+      if (letter) next.searchParams.set('letter', letter); else next.searchParams.delete('letter');
+
+      return next.toString();
+    }
+
+    // --- Floating hearts background ---
+    const heartsLayer = document.getElementById('hearts');
+    function spawnHeart(){
+      const h = document.createElement('div');
+      h.className = 'heart';
+      const size = rand(10, 22);
+      h.style.width = size + 'px';
+      h.style.height = size + 'px';
+      const left = rand(-5, 105);
+      h.style.left = left + 'vw';
+      h.style.bottom = '-30px';
+      const dur = rand(6, 12);
+      h.style.animationDuration = dur + 's';
+      h.style.opacity = '0';
+
+      // Vary colors subtly
+      const a = rand(0.55, 0.9);
+      const isAlt = Math.random() < 0.35;
+      h.style.background = isAlt
+        ? `rgba(255,154,194,${a})`
+        : `rgba(255,77,141,${a})`;
+
+      heartsLayer.appendChild(h);
+      // Remove after animation
+      setTimeout(() => h.remove(), dur * 1000);
+    }
+
+    let heartInterval = setInterval(spawnHeart, 260);
+
+    // --- No button playful dodge ---
+    const btnNo = document.getElementById('btnNo');
+    const btnYes = document.getElementById('btnYes');
+    const card = document.querySelector('.card');
+
+    function dodgeNo(){
+      const rect = card.getBoundingClientRect();
+      const btnRect = btnNo.getBoundingClientRect();
+      const padding = 18;
+
+      // Constrain within the right panel area (roughly)
+      const right = document.querySelector('.right').getBoundingClientRect();
+
+      const maxX = right.width - btnRect.width - padding;
+      const maxY = right.height - btnRect.height - padding;
+
+      const x = Math.max(padding, Math.min(maxX, rand(padding, maxX)));
+      const y = Math.max(padding, Math.min(maxY, rand(padding, maxY)));
+
+      // Convert to translate relative to current position in normal flow
+      btnNo.style.position = 'absolute';
+      btnNo.style.left = x + 'px';
+      btnNo.style.top = y + 'px';
+    }
+
+    // Make the right panel a positioning context when we start dodging
+    const rightPanel = document.querySelector('.right');
+    rightPanel.style.position = 'relative';
+
+    let noCount = 0;
+    btnNo.addEventListener('mouseenter', () => {
+      noCount++;
+      dodgeNo();
+      if (noCount === 1) toast("I respect your choice… but also… are you sure?");
+      if (noCount === 3) toast("Okay, this button is clearly having a moment.");
+      if (noCount === 6) toast("Plot twist: the universe keeps nudging you to 'Yes'.");
+    });
+    btnNo.addEventListener('click', () => {
+      noCount++;
+      dodgeNo();
+      toast("Nice try. The 'No' is shy today.");
+    });
+
+    // --- Confetti (tiny, lightweight) ---
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    let W = canvas.width = innerWidth;
+    let H = canvas.height = innerHeight;
+
+    addEventListener('resize', () => {
+      W = canvas.width = innerWidth;
+      H = canvas.height = innerHeight;
+    });
+
+    const confetti = [];
+    function burstConfetti(){
+      const count = 160;
+      for (let i=0;i<count;i++){
+        confetti.push({
+          x: W/2 + rand(-40, 40),
+          y: H/2 + rand(-20, 20),
+          vx: rand(-6, 6),
+          vy: rand(-10, -2),
+          g: rand(0.12, 0.25),
+          r: rand(2, 4),
+          a: 1,
+          rot: rand(0, Math.PI),
+          vr: rand(-0.15, 0.15),
+          // color left to browser default by using globalAlpha + fillStyle set later
+          t: Math.random() < 0.5 ? 'pink' : 'mint'
+        });
+      }
+    }
+
+    function tick(){
+      ctx.clearRect(0,0,W,H);
+      for (let i=confetti.length-1;i>=0;i--){
+        const p = confetti[i];
+        p.vy += p.g;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vr;
+        p.a *= 0.985;
+
+        if (p.y > H + 20 || p.a < 0.02) confetti.splice(i,1);
+        else {
+          ctx.save();
+          ctx.globalAlpha = p.a;
+          // Simple palette
+          ctx.fillStyle = p.t === 'pink' ? 'rgba(255,77,141,1)' : 'rgba(34,197,94,1)';
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.fillRect(-p.r, -p.r, p.r*2.2, p.r*2.2);
+          ctx.restore();
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+    tick();
+
+    // --- Toast ---
+    const toastEl = document.getElementById('toast');
+    let toastTimer;
+    function toast(message){
+      toastEl.style.display = 'block';
+      toastEl.innerHTML = message;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toastEl.style.display = 'none';
+      }, 2800);
+    }
+
+    // --- Music helpers ---
+    function isDirectAudioUrl(url){
+      return /\.(mp3|ogg|wav|m4a)(\?|#|$)/i.test(url);
+    }
+
+    function spotifyEmbed(url){
+      // supports open.spotify.com/track/... (also playlist/album)
+      const m = url.match(/open\.spotify\.com\/(track|album|playlist)\/([A-Za-z0-9]+)/);
+      if (!m) return null;
+      const type = m[1];
+      const id = m[2];
+      return `https://open.spotify.com/embed/${type}/${id}`;
+    }
+
+    function youtubeEmbed(url){
+      // supports youtu.be/ID and youtube.com/watch?v=ID
+      const v1 = url.match(/youtu\.be\/([A-Za-z0-9_-]{6,})/);
+      if (v1) return `https://www.youtube.com/embed/${v1[1]}?autoplay=1&mute=0`;
+      const v2 = url.match(/[?&]v=([A-Za-z0-9_-]{6,})/);
+      if (v2) return `https://www.youtube.com/embed/${v2[1]}?autoplay=1&mute=0`;
+      return null;
+    }
+
+    function setMusic(url){
+      // reset
+      player.pause();
+      player.removeAttribute('src');
+      player.style.display = 'none';
+      embedWrap.style.display = 'none';
+      embed.innerHTML = '';
+
+      if (!url) return;
+
+      const sp = spotifyEmbed(url);
+      const yt = youtubeEmbed(url);
+
+      if (sp){
+        // Spotify cannot autoplay; embed is the right way
+        embedWrap.style.display = 'block';
+        embed.innerHTML = `<iframe style="width:100%;height:152px;border:0" allow="encrypted-media; clipboard-write" loading="lazy" src="${sp}"></iframe>`;
+        toast2('Spotify pakai embed—tinggal tekan play.');
+        return;
+      }
+
+      if (yt){
+        // YouTube embed may autoplay depending on browser policy
+        embedWrap.style.display = 'block';
+        embed.innerHTML = `<iframe style="width:100%;aspect-ratio:16/9;border:0" allow="autoplay; encrypted-media" loading="lazy" src="${yt}"></iframe>`;
+        toast2('YouTube pakai embed. Kalau nggak autoplay, tinggal tekan play.');
+        return;
+      }
+
+      if (!isDirectAudioUrl(url)){
+        // HTML audio cannot play normal Spotify/YouTube links or pages due to format/CORS
+        toast2('Link lagunya bukan file audio langsung (.mp3/.m4a/.ogg/.wav). Pakai link file audio, atau tempel link Spotify/YouTube biar otomatis jadi embed.');
+        return;
+      }
+
+      // Direct audio
+      player.style.display = 'block';
+      player.src = url;
+      player.play().catch(() => {
+        toast2('Lagunya siap—tap tombol play ya (autoplay dibatasi browser).');
+      });
+    }
+
+    // --- Yes flow ---
+    function yes(){
+      const from = (fromInput.value || 'Hahan').trim();
+      const to = (toInput.value || 'Della').trim();
+      const letter = (letterInput.value || '').trim();
+      const song = (songInput.value || '').trim();
+
+      // Persist into URL so the shared link works for the receiver
+      const next = updateCopy();
+      history.replaceState(null, '', next);
+
+      // Update left copy
+      $('#headline').textContent = `Hey ${to}.`;
+      $('#subcopy').textContent = `${from} cuma mau bilang: I choose you—today, and the small days too.`;
+      $('#question').textContent = `Happy Valentine, ${to}.`;
+      $('#promptLine').textContent = 'Ini suratnya…';
+
+      // Render letter + go to next page
+      toName.textContent = to;
+      fromName.textContent = from;
+      letterText.textContent = letter || '...';
+      showPage('letter');
+
+      // Music
+      if (song){
+        setMusic(song);
+      }
+
+      burstConfetti();
+      toast(`<strong>Yes!</strong> Suratnya kebuka.`);
+
+      // Calm the No button
+      btnNo.style.display = 'none';
+
+      // Subtle slow down hearts
+      clearInterval(heartInterval);
+      heartInterval = setInterval(spawnHeart, 420);
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    btnYes.addEventListener('click', yes);
+
+    // Keyboard shortcut: Enter => Yes
+    addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') yes();
+      if (e.key === 'Escape') showPage('ask');
+    });
+
+    // --- Copy link ---
+    const btnShare = document.getElementById('btnShare');
+    const btnCopy2 = document.getElementById('btnCopy2');
+    const btnBack = document.getElementById('btnBack');
+
+    async function copyLink(){
+      const link = updateCopy();
+      try{
+        await navigator.clipboard.writeText(link);
+        toast('Link copied. Kirim ke dia ya.');
+      }catch{
+        const ta = document.createElement('textarea');
+        ta.value = link;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        toast('Link copied (fallback).');
+      }
+    }
+
+    btnShare.addEventListener('click', copyLink);
+    btnCopy2.addEventListener('click', () => {
+      copyLink();
+      toast2('Link copied dari halaman surat.');
+    });
+
+    btnBack.addEventListener('click', () => {
+      showPage('ask');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Update URL preview without reloading
+    [fromInput, toInput, songInput, letterInput].forEach((el) => el.addEventListener('input', () => {
+      const next = updateCopy();
+      history.replaceState(null, '', next);
+      renderLetter();
+    }));
+
+    // Initial gentle toast
+    setTimeout(() => toast('Isi nama + surat + lagu, terus klik “Yes”.'), 650);
+  </script>
+</body>
+</html>
